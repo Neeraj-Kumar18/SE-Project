@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% block content %}
+
+  <div class="toolbar">
+    <button id="addBtn" class="add-btn gradient-btn">➕ Add Expense</button>
+  </div>
+
+  <section class="expenses">
+    <table class="expense-table styled-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Description</th>
+          <th>Date</th>
+          <th>Spent Amount</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% if expenses and expenses|length > 0 %}
+        {% for e in expenses %}
+          <tr data-id="{{ e.id }}" data-desc="{{ e.description }}" data-date="{{ e.date }}" data-amount="{{ e.amount }}" data-category="{{ e.category }}">
+            <td>{{ loop.index }}</td>
+            <td>{{ e.description }}</td>
+            <td>{{ e.date }}</td>
+            <td>₹ {{ '%.2f'|format(e.amount) }}</td>
+            <td>
+              <form method="post" action="/delete/{{ e.id }}" onsubmit="return confirm('Delete this expense?');" style="display:inline">
+                <button class="small danger">Delete</button>
+              </form>
+              <button class="small edit-btn" data-id="{{ e.id }}">Edit</button>
+            </td>
+          </tr>
+        {% endfor %}
+      {% else %}
+        <tr><td colspan="5" style="text-align:center;">No expenses yet. Add one.</td></tr>
+      {% endif %}
+      </tbody>
+    </table>
+  </section>
+
+  <div class="report-btn-row">
+    <a href="/export_pdf" class="report-btn">Generate Report</a>
+  </div>
+
+  <!-- Add Modal -->
+  <div id="addModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Add Expense</h3>
+        <button id="closeModal" class="close" aria-label="Close">×</button>
+      </div>
+      <form method="post" action="/add" class="modal-form">
+        <label for="desc">Description</label>
+        <input id="desc" name="description" placeholder="Add your Expense Description" required>
+
+        <label for="category">Category</label>
+        <select id="category" name="category" required>
+          <option value="">Select a category</option>
+          <option value="finance">Finance</option>
+          <option value="food">Food</option>
+          <option value="travel">Travel</option>
+          <option value="other">Other (General)</option>
+        </select>
+
+        <label for="date">Expenditure Date</label>
+        <input id="date" name="date" type="date" required>
+
+        <label for="amount">Spent Amount</label>
+        <input id="amount" name="amount" type="number" step="0.01" placeholder="Add your Spent Amount" required>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelModal" class="btn cancel">Cancel</button>
+          <button type="submit" class="btn primary">Add Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Modal (embedded) -->
+  <div id="editModal" class="modal" aria-hidden="true">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Edit Expense</h3>
+        <button id="closeEditModal" class="close" aria-label="Close">×</button>
+      </div>
+      <form id="editForm" method="post" action="" class="modal-form">
+        <label for="edit_desc">Description</label>
+        <input id="edit_desc" name="description" placeholder="Add your Expense Description" required>
+
+        <label for="edit_category">Category</label>
+        <select id="edit_category" name="category" required>
+          <option value="finance">Finance</option>
+          <option value="food">Food</option>
+          <option value="travel">Travel</option>
+          <option value="general">General</option>
+          <option value="other">Other</option>
+        </select>
+
+        <label for="edit_date">Expenditure Date</label>
+        <input id="edit_date" name="date" type="date" required>
+
+        <label for="edit_amount">Spent Amount</label>
+        <input id="edit_amount" name="amount" type="number" step="0.01" placeholder="Add your Spent Amount" required>
+
+        <div class="modal-actions">
+          <button type="button" id="cancelEdit" class="btn cancel">Cancel</button>
+          <button type="submit" class="btn primary">Update Expense</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="modern-auth">
+  <h1 class="auth-title">Create new Account</h1>
+  <p class="auth-sub">Already Registered? <a href="/login">Log in here.</a></p>
+  <form method="post" class="modern-form">
+    <label for="name">NAME</label>
+    <input id="name" name="name" placeholder="Your Name" required class="modern-input">
+    <label for="username">USERNAME</label>
+    <input id="username" name="username" type="text" placeholder="Examle@123" required class="modern-input">
+    <label for="password">PASSWORD</label>
+    <input id="password" name="password" type="password" placeholder="******" required class="modern-input">
+    <button type="submit" class="modern-btn">sign up</button>
+  </form>
+</div>
+{% endblock %}
